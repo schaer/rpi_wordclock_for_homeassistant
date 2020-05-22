@@ -1,0 +1,8 @@
+{
+  "domain": "rpi_wordclock",
+  "name": "Raspberry Pi Wordclock",
+  "documentation": "https://github.com/bk1285/rpi_wordclock_for_homeassistant",
+  "dependencies": [],
+  "codeowners": [],
+  "requirements": []
+}
