@@ -1,3 +1,5 @@
+"""Raspberry Pi Wordclock integration."""
+
 import logging
 import voluptuous as vol
 import requests
@@ -10,6 +12,7 @@ _LOGGER = logging.getLogger(__name__)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_HOST): cv.string,
+    vol.Optional(CONF_NAME): cv.string,
 })
 
 
@@ -84,13 +87,16 @@ class RpiWordclock(Light):
         You can skip the brightness part if your light does not support
         brightness control.
         """
-        if ATTR_BRIGHTNESS in kwargs:
-            r = requests.post(self._api_endpoint + '/brightness' , json={"brightness": kwargs[ATTR_BRIGHTNESS]})
-            self.log(r)
+        # if ATTR_BRIGHTNESS in kwargs:
+        #     r = requests.post(self._api_endpoint + '/brightness' , json={"brightness": kwargs[ATTR_BRIGHTNESS]})
+        #     self.log(r)
 
-        else:
-            r = requests.post(self._api_endpoint + '/brightness' , json={"brightness": 250})
-            self.log(r)
+        # else:
+        #     r = requests.post(self._api_endpoint + '/brightness' , json={"brightness": 250})
+        #     self.log(r)
+
+        r = requests.post(self._api_endpoint + '/plugin' , json={"name": "time_default"})
+        self.log(r)
 
         if ATTR_COLOR_TEMP in kwargs:
             _LOGGER.info("Temp: " + str(kwargs[ATTR_COLOR_TEMP]))
@@ -102,7 +108,8 @@ class RpiWordclock(Light):
         """
         Instruct the light to turn off.
         """
-        r = requests.post(self._api_endpoint + '/brightness' , json={"brightness": self._off_brightness})
+        # r = requests.post(self._api_endpoint + '/brightness' , json={"brightness": self._off_brightness})
+        r = requests.post(self._api_endpoint + '/plugin' , json={"name": "leds_off"})
         self.log(r)
 
     def update(self):
@@ -111,10 +118,14 @@ class RpiWordclock(Light):
 
         This is the only method that should fetch new data for Home Assistant.
         """
-        r = requests.get(self._api_endpoint + '/brightness')
+        r = requests.get(self._api_endpoint + '/plugin')
         self.log(r)
-        self._brightness = int(r.text)
-        self._state = True if self._brightness > self._off_brightness else False
+        self._state = False if r.json()['plugin']['name'] == 'leds_off' else True
+
+        # r = requests.get(self._api_endpoint + '/brightness')
+        # self.log(r)
+        # self._brightness = int(r.text)
+        # self._state = True if self._brightness > self._off_brightness else False
 
     def log(self, reply):
         _LOGGER.info("Communication with rpi_wordclock " + self._name + " succeeded.")
