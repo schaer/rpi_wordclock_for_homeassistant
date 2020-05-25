@@ -4,7 +4,7 @@ import logging
 import voluptuous as vol
 import requests
 
-from homeassistant.components.light import ATTR_BRIGHTNESS, ATTR_COLOR_TEMP, Light, PLATFORM_SCHEMA, SUPPORT_BRIGHTNESS, SUPPORT_COLOR_TEMP
+from homeassistant.components.light import LightEntity, ATTR_BRIGHTNESS, ATTR_COLOR_TEMP, PLATFORM_SCHEMA, SUPPORT_BRIGHTNESS, SUPPORT_COLOR_TEMP
 from homeassistant.const import CONF_HOST, CONF_NAME
 import homeassistant.helpers.config_validation as cv
 
