@@ -33,7 +33,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     _LOGGER.info("Added rpi_wordclock light at " + host)
 
 
-class RpiWordclock(Light):
+class RpiWordclock(LightEntity):
     """
     Representation of an raspberry pi wordclock Light.
     """
